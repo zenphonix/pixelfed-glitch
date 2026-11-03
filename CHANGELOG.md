@@ -1,5 +1,31 @@
 # Release Notes
 
+## [v0.15.2-glitch.1.13.1](https://github.com/pixelfed-glitch/pixelfed/compare/v0.15.2-glitch.1.13.0...v0.15.2-glitch.1.13.1)
+
+### Glitch Updates
+- Email admins when a curated registration applicant replies. Off by default, enable with `INSTANCE_CUR_REG_NOTIFY_ADMIN_ON_USER_RESPONSE`. Uses the same recipients as the new application email (#25) ([fe2336f9f](https://github.com/pixelfed-glitch/pixelfed/commit/fe2336f9f))
+- Docker image
+  - Add `mariadb-client-compat`, fixing the cold bootstrap failure with `DB_CONNECTION=mysql` caused by the missing `mysql` binary (#68) ([60060b014](https://github.com/pixelfed-glitch/pixelfed/commit/60060b014))
+  - Fix "Please provide a valid cache path" on first startup with an empty storage volume (#72) ([60060b014](https://github.com/pixelfed-glitch/pixelfed/commit/60060b014))
+  - `db` healthcheck in the Compose files now works with MariaDB, MySQL and PostgreSQL images ([60060b014](https://github.com/pixelfed-glitch/pixelfed/commit/60060b014))
+
+### Added (from Upstream)
+- `AP_ALLOWED_PRIVATE_ADDRESSES` lets federation reach listed private IPs or CIDR ranges, IPv4 and IPv6. Empty by default. ([3a13763f0](https://github.com/pixelfed-glitch/pixelfed/commit/3a13763f0))
+- `app:instance-update-active-users` command to recalculate monthly and half-year active users ([91294e6bd](https://github.com/pixelfed-glitch/pixelfed/commit/91294e6bd))
+- `IMAGE_OPTIPNG_LEVEL` sets the optipng optimization level, with the default lowered from 7 to 2 for faster PNG processing ([1298cd720](https://github.com/pixelfed-glitch/pixelfed/commit/1298cd720))
+
+### Updates (from Upstream)
+- Fix active user counts in nodeinfo and the instance API. Only `last_active_at` now counts, deleted users are excluded, and the monthly window is 30 days instead of 5 weeks, so reported numbers may drop. 
+  Storage usage updates no longer bump a user's `updated_at` ([91294e6bd](https://github.com/pixelfed-glitch/pixelfed/commit/91294e6bd))
+- Fix service worker ([7d79b6f67](https://github.com/pixelfed-glitch/pixelfed/commit/7d79b6f67))
+- Publish posts sooner once media is ready ([78e7dc0c9](https://github.com/pixelfed-glitch/pixelfed/commit/78e7dc0c9))
+- Fix PHP 8.5 deprecation notice in `config/filesystems.php`. `PF_FILESYSTEM_LOCAL_*` values are now parsed as octal, such as `0644` ([459794ad5](https://github.com/pixelfed-glitch/pixelfed/commit/459794ad5), [f414708f0](https://github.com/pixelfed-glitch/pixelfed/commit/f414708f0))
+
+### Potential Breaking Change Note
+
+- An existing decimal PF_FILESYSTEM_LOCAL_* value like 420 now gets different permissions, because it's read as octal; be sure to check your configuration before updating.
+
+
 ## [v0.15.2-glitch.1.13.0](https://github.com/pixelfed-glitch/pixelfed/compare/v0.12.6-glitch.1.12.2...v0.15.2-glitch.1.13.0)
 
 Syncs Glitch with upstream Pixelfed v0.15.2 (Laravel 13, rewritten direct messages, and several upstream default changes). Back up the database before upgrading.
